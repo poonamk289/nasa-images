@@ -1,87 +1,94 @@
 localStorage.clear();
 
-const api=`U0amRgbswgIt1qjO1OogoulOW76Y8LaDlYS6ORNZ`;
-const image=document.getElementById("img");
-const cont=document.getElementById("content");
-const paragraph=document.getElementById("para");
-const search=document.getElementById("search-input");
-const button=document.getElementById("search-button");
-const picheading=document.querySelector(".pic-heading");
+const apiKey =`8OjLgsvkucmiZPO344zRocig6OYSLFO0WuELCRYQ`;
 
-console.log("sjhajx");
+const currentDayImage = document.querySelector(".image-cont");
+const ImgHeading = document.querySelector(".image-heading");
+const description = document.querySelector(".desc");
+const searchInput = document.querySelector("#search-input");
+const searchBtn = document.querySelector("#search-btn");
+const dateHistory = document.querySelector(".history-date");
+const pictureDate = document.querySelector("#picture-date");
 
-let arr= new Array();
+let arr = new Array();
 
+async function getImageOfTheDay(selectdate){
+    let date ;
+    if(selectdate){
+        date = selectdate;
+    }else{
+        date = new Date().toISOString().split("T")[0];
+    }
+    // let date = new Date().toISOString().split("T")[0];
+    // console.log(date);
+    const url = `https://api.nasa.gov/planetary/apod?date=${date}&api_key=${apiKey} `;
+    const response = await fetch(url);
+    const result = await response.json();
+    // console.log(result);
 
+    currentDayImage.innerHTML=`<img src="${result.url}" alt="nasa image" id="image-current">`;
+    
+    ImgHeading.innerHTML = result.title;
+    description.innerHTML = result.explanation;
 
-async function getCurrentImageOfTheDay(selectdate){
-  let date;
+    if(selectdate){
+        pictureDate.innerHTML = `Picture on ${result.date}`;
+        addSearchToHistory(selectdate);
+        let obj = {
+            date :selectdate, 
+        }
+        arr.push(obj);
+        saveSearch(arr);
+    }
 
-  if(selectdate){
-    date=selectdate;
-  }
-  else{
-    date=new Date().toISOString().split("T")[0];
-
-  }
-//   let date= new Date().toISOString().split("T")[0];
-  console.log(date);
-  const url=`https://api.nasa.gov/planetary/apod?date=${date}&api_key=${api} `;
-  const response = await fetch(url);
-  const result= await response.json();
-  console.log(result);
-
-
-  image.innerHTML=`<img src="${result.hdurl}"alt="nasa image" id="img">`;
-  cont.innerHTML=result.title;
-  paragraph.innerHTML=result.explanation;
-
-
-  if(selectdate){
-    picheading.innerHTML=`pictuure on ${result.date}`;
-     const li= document.createElement('li');
-     li.innerHTML=`<a href="#">${selectdate}</a>`;
-     dateHistory.appendChild(li);
-    //  console.log(li.children[0]);
-    const a= li.children[0];
-     a.addEventListener("click",getImageOfTheDay)
-     
-     let obj={
-        date: selectdate,
-       
-     }
-     arr.push(obj);
-     localStorage.setItem('history',JSON.stringify(arr));
-
-  }
 }
 
+function getCurrentImageOfTheDay(){
+    getImageOfTheDay();
+}
+getCurrentImageOfTheDay();
 
-  getCurrentImageOfTheDay();
-  button.addEventListener("click",(e)=>{
+
+searchBtn.addEventListener("click",(e)=>{
     e.preventDefault();
-    const selectdate=search.value ;
-    getCurrentImageOfTheDay(selectdate);
-  })
+    // console.log(searchInput.value);
+    const selectDate = searchInput.value;
+    getImageOfTheDay(selectDate);
 
-  function getImageOfTheDay(event1){
+})
 
-  const adate= event1.target.innerHTML;
+function getImageOfTheDayClick(event){
+   
+    const adate = event.target.innerHTML;
+   getFromLocalStorage(adate);
+}
 
-  getfromlocalstorage(adate);
-  }
+ async function getFromLocalStorage(date){
 
+    const url = `https://api.nasa.gov/planetary/apod?date=${date}&api_key=${apiKey} `;
+    const response = await fetch(url);
+    const result = await response.json();
+    
+    currentDayImage.innerHTML=`<img src="${result.url}" alt="nasa image" id="image-current">`;
+    
+    ImgHeading.innerHTML = result.title;
+    description.innerHTML = result.explanation;
 
-  async function getfromlocalstorage(date){
-    const url=`https://api.nasa.gov/planetary/apod?date=${date}&api_key=${api} `;
-  const response = await fetch(url);
-  const result= await response.json();
+    pictureDate.innerHTML = `Picture on ${result.date}`;
+   
 
+}
 
-  image.innerHTML=`<img src="${result.url}"alt="nasa image" id="img">`;
-  cont.innerHTML=result.title;
-  paragraph.innerHTML=result.explanation;
+function saveSearch(arr){
+    localStorage.setItem('history',JSON.stringify(arr));
+}
 
+function addSearchToHistory(selectdate){
+    const li = document.createElement('li');
+        li.innerHTML = `<a href="#">${selectdate}</a>`;
+        dateHistory.appendChild(li);
+        // console.log(li.children[0]);
+        const a = li.children[0];
+        a.addEventListener("click",getImageOfTheDayClick)
+}
 
-    picheading.innerHTML=`pictuure on ${result.date}`;
-  }

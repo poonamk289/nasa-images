@@ -1,40 +1,19 @@
-body{
-    top: 0;
-    margin: 0;
-    /* background-color:blac; */
-}
-.main-div{
-    /* border: 2px solid rgb(30, 3, 73); */
-    margin: 5px;
- 
-    /* background-color: white; */
-    padding:10px;
-   
-}
-.heading{
-    /* border: 2px solid red; */
+.nasa-cont{
     background-color: black;
-}
-.pic-heading{
-    /* border: 2px solid green; */
-    color: white;
-    font-size: 20px;
-    margin:5px;
-}
-.image>img{
-    /* border: 2px solid blue; */
-    padding: 10px;
-    width: 90vw;
-    height: 80vh;
-    margin: 5px;
-    align-items: center;
-    justify-content: center;
-}
-.content{
-    /* border:2px solid orangered; */
     color:white;
-    padding: 10px;
-    /* width: 40vw; */
-    height: 50vh;
-    margin: 10px;
+    padding: 0.1rem 0.6rem 4rem 0.6rem;
+}
+.form-div{
+    padding: 1rem;
+}
+.history-div{
+    padding: 1rem;
+}
+img{
+    width: 80vw;
+    height: 70vh;
+}
+ul{
+    text-decoration: none;
+    list-style: none;
 }
